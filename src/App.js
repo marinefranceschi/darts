@@ -9,6 +9,7 @@ class App extends Component {
     super();
 
     this.state = {
+      playingTeam: 0,
       teams: [
         {
           players: ['Thomas', 'Marine'],
@@ -29,8 +30,27 @@ class App extends Component {
         }
       ]
     };
+
+    this.nextTurn = this.nextTurn.bind(this);
+    this.addScore = this.addScore.bind(this);
   }
+
+  nextTurn() {
+    this.setState((prevState) => ({
+      playingTeam: Number(!prevState.playingTeam)
+    }))
+  }
+
+  addScore(number) {
+    this.setState((prevState) => {
+      const currentTeam = prevState.teams[prevState.playingTeam];
+      currentTeam.score[number] = currentTeam.score[number] ? currentTeam.score[number] + 1 : 1;
+    })
+  }
+
   render() {
+    const { teams, playingTeam } = this.state;
+
     return (
       <div className="App">
         <div className="App-header">
@@ -38,14 +58,22 @@ class App extends Component {
           <h2>Darts Counter</h2>
         </div>
         <p className="App-intro">
+          <div className="player-row">
+            {teams.map((team) =>
+              <span className={teams[playingTeam] === team ? 'playing' : ''}>
+                {team.players.join(' & ')}
+              </span>
+            )}
+          </div>
           {buttons.map(button =>
             <div>
-              <button>
+              <button onClick={() => this.addScore(button)}>
                 {button}
               </button>
             </div>
           )}
         </p>
+        <button onClick={this.nextTurn}>Next Turn</button>
       </div>
     );
   }
