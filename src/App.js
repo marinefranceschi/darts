@@ -1,32 +1,27 @@
 import React, { Component } from 'react';
 import logo from './target.png';
 import './App.css';
+import FlipCard from 'react-flipcard';
 
-const buttons = [15, 16, 17, 18, 19, 20, 'ø'];
+const numbers = [15, 16, 17, 18, 19, 20, 'ø'];
 
 class App extends Component {
   constructor() {
     super();
 
     this.state = {
+      isFlipped: false,
       playingTeam: 0,
       teams: [
         {
           players: ['Thomas', 'Marine'],
-          score: {
-            15: 3,
-            16: 2
-          }
+          score: {}
         },
 
         {
           players: ['John', 'David'],
 
-          score: {
-            15: 3,
-            16: 3,
-            17: 0
-          }
+          score: {}
         }
       ]
     };
@@ -36,20 +31,50 @@ class App extends Component {
   }
 
   nextTurn() {
-    this.setState((prevState) => ({
-      playingTeam: Number(!prevState.playingTeam)
-    }))
+    this.setState(prevState => ({
+      playingTeam: Number(!prevState.playingTeam),
+      isFlipped: !prevState.isFlipped
+    }));
   }
 
   addScore(number) {
-    this.setState((prevState) => {
+    this.setState(prevState => {
       const currentTeam = prevState.teams[prevState.playingTeam];
-      currentTeam.score[number] = currentTeam.score[number] ? currentTeam.score[number] + 1 : 1;
-    })
+      currentTeam.score[number] = currentTeam.score[number]
+        ? currentTeam.score[number] + 1
+        : 1;
+    });
   }
 
   render() {
     const { teams, playingTeam } = this.state;
+    const cardContent = team =>
+      <div className="card-content">
+        <div className="player-row">
+          <span className={teams[playingTeam] === team ? 'playing' : ''}>
+            {team.players.join(' & ')}
+          </span>
+        </div>
+        <div>
+          {numbers.map(number =>
+            <div key={`${playingTeam}-${number}`} className="score-row">
+              <button
+                className="score-btn"
+                disabled={team.score[number] >= 3}
+                onClick={() => this.addScore(number)}
+              >
+                {number}
+              </button>
+              <div>
+                {team.score[number]}
+              </div>
+            </div>
+          )}
+        </div>
+        <button className="next-turn-btn" onClick={this.nextTurn}>
+          Next Turn
+        </button>
+      </div>;
 
     return (
       <div className="App">
@@ -57,23 +82,12 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Darts Counter</h2>
         </div>
-        <p className="App-intro">
-          <div className="player-row">
-            {teams.map((team) =>
-              <span className={teams[playingTeam] === team ? 'playing' : ''}>
-                {team.players.join(' & ')}
-              </span>
-            )}
-          </div>
-          {buttons.map(button =>
-            <div>
-              <button onClick={() => this.addScore(button)}>
-                {button}
-              </button>
-            </div>
-          )}
-        </p>
-        <button onClick={this.nextTurn}>Next Turn</button>
+        <div className="App-body">
+          <FlipCard disabled flipped={this.state.isFlipped}>
+            {cardContent(teams[0])}
+            {cardContent(teams[1])}
+          </FlipCard>
+        </div>
       </div>
     );
   }

@@ -18,6 +18,12 @@
   font-size: large;
 }
 
+.App-body {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
 .player-row {
   border-bottom: 1px solid black;
 }
@@ -30,6 +36,40 @@
   font-weight: bold;
 }
 
+.card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: 400px;
+  background-color: #6dddff;
+  width: 300px;
+}
+
+.score-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 150px;
+}
+
+.score-btn {
+  border: none;
+  background: white;
+  cursor: pointer;
+  height: 30px;
+  width: 75px;
+  margin-top: 3px;
+}
+
+.next-turn-btn {
+  border: none;
+  background: white;
+  height: 35px;
+  width: 120px;
+  border-radius: 35px;
+  cursor: pointer;
+}
 
 /*@keyframes App-logo-spin {
   from { transform: rotate(0deg); }
