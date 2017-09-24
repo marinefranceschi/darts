@@ -14,13 +14,14 @@ class App extends Component {
       playingTeam: 0,
       teams: [
         {
+          name: 'Team 1',
           players: ['Thomas', 'Marine'],
           score: {}
         },
 
         {
+          name: 'Team 2',
           players: ['John', 'David'],
-
           score: {}
         }
       ]
@@ -28,6 +29,7 @@ class App extends Component {
 
     this.nextTurn = this.nextTurn.bind(this);
     this.addScore = this.addScore.bind(this);
+    this.changeName = this.changeName.bind(this);
   }
 
   nextTurn() {
@@ -46,14 +48,20 @@ class App extends Component {
     });
   }
 
+  changeName(evt) {
+    const newName = evt.target.value;
+    this.setState(prevState => {
+      const currentTeam = prevState.teams[prevState.playingTeam];
+      currentTeam.name = newName;
+    });
+  }
+
   render() {
     const { teams, playingTeam } = this.state;
     const cardContent = team =>
       <div className="card-content">
         <div className="player-row">
-          <span className={teams[playingTeam] === team ? 'playing' : ''}>
-            {team.players.join(' & ')}
-          </span>
+          <input value={team.name} onChange={this.changeName} />
         </div>
         <div>
           {numbers.map(number =>
